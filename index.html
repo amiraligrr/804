@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فوتبال درفت شانسی</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>فوتبال درفت شانسی</h1>
+    <div id="setup">
+        <div class="formation-card" onclick="selectFormation('4-4-2')">
+            <img src="442.jpg" alt="4-4-2">
+            <p>4-4-2</p>
+        </div>
+        <div class="formation-card" onclick="selectFormation('4-3-3')">
+            <img src="433.jpg" alt="4-3-3">
+            <p>4-3-3</p>
+        </div>
+        <div class="formation-card" onclick="selectFormation('3-5-2')">
+            <img src="352.jpg" alt="3-5-2">
+            <p>3-5-2</p>
+        </div>
+        <div class="formation-card" onclick="selectFormation('5-3-2')">
+            <img src="532.jpg" alt="5-3-2">
+            <p>5-3-2</p>
+        </div>
+        <div class="formation-card" onclick="selectFormation('4-2-3-1')">
+            <img src="4231.jpg" alt="4-2-3-1">
+            <p>4-2-3-1</p>
+        </div>
+    </div>
+    <div id="draft" class="hidden">
+        <div id="result" class="formation"></div>
+    </div>
+    <div id="average-result" class="hidden result-card">
+        <button class="close-button" onclick="closeResult()">X</button>
+        <div id="average-score"></div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
+<script src="./javascript.js"></script>
