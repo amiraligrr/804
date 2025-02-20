@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./main_css.css">
+    <link rel="stylesheet" href="../bootstap/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>ورود به کلاس</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* height: 100vh;
+            margin: 0; */
+            direction: rtl;
+        }
+        #login-container {
+            border: 1px solid #0473fb;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+            width: 300;
+            height: 70px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        #login-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body style="background-color: aqua;">
+    
+    <div id="login-container">
+        <div class="input-group">
+            <label  for="student-number">شماره لیست دانش‌آموزی:</label>
+            <select id="student-number">
+                <option value="">شماره خود را انتخاب کنید</option>
+                <!-- Dynamically create options from 1 to 26 -->
+                <script>
+                    for (var i = 1; i <= 26; i++) {
+                        document.write('<option value="' + i + '">' + i + '</option>');
+                    }
+                </script>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="password">رمز عبور:</label>
+            <input type="password" id="password" placeholder="رمز عبور خود را وارد کنید">
+        </div>
+        <button id="login-btn" style="background-color: cornflowerblue;">ورود</button>
+    </div>
+    <script>
+        // آرایه‌ای برای ذخیره رمز عبور هر دانش‌آموز
+        var passwords = [
+            "abc", "password2", "password3", "password4", "password5",
+            "password6", "password7", "password8", "password9", "password10",
+            "password11", "password12", "password13", "password14", "password15",
+            "password16", "password17", "password18", "password19", "amirali138985",
+            "password21", "password22", "password23", "password24", "password25",
+            "password26"
+        ];
+
+        document.getElementById('login-btn').addEventListener('click', function() {
+            var studentNumber = document.getElementById('student-number').value;
+            var password = document.getElementById('password').value;
+
+            if (studentNumber && password) {
+                // بررسی رمز عبور
+                if (password === passwords[studentNumber - 1]) {
+                    // ذخیره شماره دانش‌آموز در localStorage
+                    localStorage.setItem('studentNumber', studentNumber);
+
+                    // انتقال به صفحه اصلی
+                    window.location.href = 'index.html';
+                } else {
+                    alert('رمز عبور نادرست است.');
+                }
+            } else {
+                alert('لطفاً شماره دانش‌آموز و رمز عبور را وارد کنید.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+@font-face {
+    font-family: "Vazir-FD-WOL.woff";
+    src: url(../font/Vazir-FD-WOL.woff);
+}
+#backgrand_heder{
+    
+    background-color: rgb(37, 79, 171);
+    width: 70%;
+    height: 70%;
+    margin-top: 10px;
+    border-radius: 30px;
+    margin-left: 15%;
+}
+.logo{
+    text-align: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 20px;
+    margin-top: 0.2rem;
+}
+#body{
+background-color: rgb(180, 214, 243);
+margin: 0%;
+}
+.vorod{
+font-family: "Vazir-FD-WOL.woff";
+font-size:xx-large;
+text-align:center;
+ /* margin-top: -2rem; */
+margin-right: 1.5rem; 
+color: rgb(11, 22, 72);
+}
+.cards{
+    border-radius: 20px;
+    background-color: rgb(92, 255, 174);
+/* height: rem; */
+font-size: xx-small;
+}
+.foter{
+    direction: rtl;
+    background-color: black;
+    height: 100%;
+    width: 100%;
+
+    padding-top: 10rem;
+}
