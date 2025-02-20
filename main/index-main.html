@@ -68,7 +68,7 @@
                 </div>
                 <div class="col">
                     <div class="card  text-light" style="border-radius: 25px;">
-                      <a href="./../chat/chat-index.html">  <div class="card-body cards text-center">
+                      <a href="./../main/chat.html" onclick="goToChat">  <div class="card-body cards text-center">
                             <div class="h3 mb3">
                                 <i class="bi bi-chat"></i>
                             </div>
@@ -227,25 +227,31 @@
           <a href="./tamas ba ma.html">تماس با ما</a>
         </p>
       </footer>
-    <script>
-        // آرایه‌ای برای ذخیره نام دانش‌آموزان
+      <script>
+        // لیست دانش‌آموزان
         var studentNames = [
-            "محمد ضیا الدینی", "حسن طهمورسی", "علی عرب نزاد", "ارشیا عزیز زاده", "بردیا عسکریان(عسکر مرغون)",
-            "محمدمهدی علیزاده(الوزاده)", "حسن فدایی", "سپهر فکوری", "امیرعلی قرایی", "حسین قربانی",
+            "محمد ضیا الدینی", "حسن طهمورسی", "علی عرب نزاد", "ارشیا عزیز زاده", "بردیا عسکریان",
+            "محمدمهدی علیزاده", "حسن فدایی", "سپهر فکوری", "امیرعلی قرایی", "حسین قربانی",
             "امیرعباس قطبی", "پارسا قنبری", "کیان کاراموزیان", "ابوالفضل کارگر", "ابتین کاظمی",
-            "عکی کروکی(کلوخی)", "علیرضا کریمی", "رادین کوشش", "محمد مهدی کهندل(کهن کرم)", "امیرعلی گرانمایه(ادمین)",
-            "مهراد گرگانی", "ارشام لاری", "امین مالکی", "رادین محسنی", "متین محمدی",
-            "سام محمودی"
+            "عکی کروکی", "علیرضا کریمی", "رادین کوشش", "محمد مهدی کهندل", "امیرعلی گرانمایه",
+            "مهراد گرگانی", "ارشام لاری", "امین مالکی", "رادین محسنی", "متین محمدی", "سام محمودی"
         ];
-
-        // بازیابی شماره دانش‌آموز از localStorage
+    
+        // گرفتن شماره دانش‌آموز از localStorage
         var studentNumber = localStorage.getItem('studentNumber');
-
-        // تبدیل شماره دانش‌آموز به نام و ذخیره در متغیر
-        var studentName = studentNames[studentNumber - 1];
-
-        // نمایش نام دانش‌آموز در صفحه
+    
+        // تبدیل شماره به نام دانش‌آموز
+        var studentName = studentNames[studentNumber - 1] || "مهمان";
+    
+        // نمایش نام در صفحه اصلی
         document.getElementById('student-name').textContent = studentName;
+    
+        // تابع برای ذخیره نام کاربر هنگام ورود به چت
+        function goToChat() {
+            localStorage.setItem('chatUsername', studentName);
+            window.location.href = "chat.html"; // انتقال به صفحه چت
+        }
     </script>
+    
 </body>
 </html>

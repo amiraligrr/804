@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>چت آنلاین</title>
+    <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .chat-container {
+            width: 60%;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        .message-box {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .admin {
+            color: red;
+            font-weight: bold;
+        }
+        .user {
+            color: blue;
+            font-weight: bold;
+        }
+        .reply {
+            font-size: 12px;
+            color: gray;
+        }
+        .chat-input {
+            width: 80%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .send-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: blue;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h2 id="welcome-message"></h2>
+        <div id="chat-box"></div>
+        <input type="text" id="message-input" class="chat-input" placeholder="پیام خود را بنویسید...">
+        <button onclick="sendMessage()" class="send-btn">ارسال</button>
+    </div>
+
+    <script>
+        var chatUsername = localStorage.getItem('chatUsername') || "مهمان";
+        document.getElementById("welcome-message").innerText = `خوش آمدید، ${chatUsername}!`;
+
+        var chatBox = document.getElementById("chat-box");
+        var admins = ["امیرعلی گرانمایه"];
+        var bannedWords = ["کلمه_بد", "فحش", "حرف_نامناسب"];
+        var mutedUsers = {};
+
+        function sendMessage() {
+            var messageInput = document.getElementById("message-input");
+            var message = messageInput.value.trim();
+
+            if (message === "") return;
+
+            var messageDiv = document.createElement("div");
+            messageDiv.classList.add("message-box");
+
+            var sender = document.createElement("span");
+            sender.classList.add(admins.includes(chatUsername) ? "admin" : "user");
+            sender.innerText = `${chatUsername}: `;
+            messageDiv.appendChild(sender);
+
+            var text = document.createElement("span");
+            text.innerText = message;
+            messageDiv.appendChild(text);
+
+            chatBox.appendChild(messageDiv);
+            messageInput.value = "";
+        }
+    </script>
+</body>
+</html>
