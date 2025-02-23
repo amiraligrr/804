@@ -1,0 +1,97 @@
+// app.html (فرانت‌اند - HTML + CSS + JavaScript متصل به نام کاربری + فیلتر کلمات + مدیریت ادمین‌ها)
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>چت آنلاین حرفه‌ای</title>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; background-color: #121212; color: white; text-align: center; }
+        .chat-container { max-width: 400px; margin: 20px auto; background: #1e1e1e; padding: 15px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); }
+        .chat-box { height: 300px; overflow-y: auto; padding: 10px; border-radius: 5px; background: #252525; }
+        .message { margin: 10px 0; padding: 8px; border-radius: 8px; text-align: left; background: #333; }
+        .message .username { font-weight: bold; color: #ff9800; }
+        .input-container { display: flex; gap: 5px; margin-top: 10px; }
+        input { flex: 1; padding: 10px; border-radius: 5px; border: none; background: #333; color: white; }
+        button { padding: 10px; border: none; border-radius: 5px; background: #ff9800; color: white; cursor: pointer; }
+        button:hover { background: #e68900; }
+        .reply { font-size: 0.8em; color: #bbb; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h2>💬 چت آنلاین</h2>
+        <div id="chat-box" class="chat-box"></div>
+        <div class="input-container">
+            <input type="text" id="input-box" placeholder="پیام خود را بنویسید...">
+            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // دریافت نام کاربری از صفحه قبلی
+        var studentNames = [
+            "محمد ضیا الدینی", "حسن طهمورسی", "علی عرب نزاد", "ارشیا عزیز زاده", "بردیا عسکریان",
+            "محمدمهدی علیزاده", "حسن فدایی", "سپهر فکوری", "امیرعلی قرایی", "حسین قربانی",
+            "امیرعباس قطبی", "پارسا قنبری", "کیان کاراموزیان", "ابوالفضل کارگر", "ابتین کاظمی",
+            "عکی کروکی", "علیرضا کریمی", "رادین کوشش", "محمد مهدی کهندل", "امیرعلی گرانمایه",
+            "مهراد گرگانی", "ارشام لاری", "امین مالکی", "رادین محسنی", "متین محمدی", "سام محمودی"
+        ];
+    
+        var studentNumber = localStorage.getItem('studentNumber');
+        var username = studentNames[studentNumber - 1] || "کاربر ناشناس";
+        localStorage.setItem('chatUsername', username);
+        
+        const socket = io("http://localhost:3000", { query: { username } });
+
+        const badWords = ["کلمه1", "کلمه2", "کلمه3"]; // لیست کلمات فیلتر شده
+        const admins = ["Admin1", "Admin2"]; // لیست ادمین‌ها
+        let mutedUsers = {};
+
+        function sendMessage(replyTo = null) {
+            const input = document.getElementById("input-box");
+            let msg = input.value.trim();
+            if (!msg) return;
+
+            if (mutedUsers[username]) {
+                alert("شما در حالت سکوت هستید و نمی‌توانید پیام ارسال کنید!");
+                return;
+            }
+
+            // فیلتر کردن کلمات نامناسب
+            if (badWords.some(word => msg.includes(word)) && !admins.includes(username)) {
+                socket.emit("mute", username);
+                alert("شما برای 30 دقیقه سکوت شده‌اید!");
+                return;
+            }
+
+            socket.emit("message", { username, msg: replyTo ? `@${replyTo}: ${msg}` : msg });
+            input.value = "";
+        }
+
+        socket.on("message", ({ username, msg }) => {
+            const chatBox = document.getElementById("chat-box");
+            const messageElem = document.createElement("div");
+            messageElem.classList.add("message");
+            
+            let replyMatch = msg.match(/^@(\w+): (.*)/);
+            if (replyMatch) {
+                messageElem.innerHTML = `<span class="reply">پاسخ به ${replyMatch[1]}:</span> `;
+                msg = replyMatch[2];
+            }
+
+            messageElem.innerHTML += `<span class="username">${username}:</span> ${msg}`;
+            chatBox.appendChild(messageElem);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        socket.on("muted", (user) => {
+            mutedUsers[user] = true;
+            setTimeout(() => delete mutedUsers[user], 1800000); // حذف سکوت بعد از 30 دقیقه
+            socket.emit("message", { username: " بات(گردن کلفت)", msg: `@${user}: شما برای 30 دقیقه سکوت شده‌اید!` });
+        });
+    </script>
+</body>
+</html>
