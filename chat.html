@@ -1,4 +1,3 @@
-// app.html (فرانت‌اند - HTML + CSS + JavaScript متصل به نام کاربری + فیلتر کلمات + مدیریت ادمین‌ها)
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -46,7 +45,7 @@
         
         const socket = io("http://localhost:3000", { query: { username } });
 
-        const badWords = ["کلمه1", "کلمه2", "کلمه3"]; // لیست کلمات فیلتر شده
+        const badWords = ["کلمه1", "کلمه2", "سلام"]; // لیست کلمات فیلتر شده
         const admins = ["Admin1", "Admin2"]; // لیست ادمین‌ها
         let mutedUsers = {};
 
@@ -54,18 +53,6 @@
             const input = document.getElementById("input-box");
             let msg = input.value.trim();
             if (!msg) return;
-
-            if (mutedUsers[username]) {
-                alert("شما در حالت سکوت هستید و نمی‌توانید پیام ارسال کنید!");
-                return;
-            }
-
-            // فیلتر کردن کلمات نامناسب
-            if (badWords.some(word => msg.includes(word)) && !admins.includes(username)) {
-                socket.emit("mute", username);
-                alert("شما برای 30 دقیقه سکوت شده‌اید!");
-                return;
-            }
 
             socket.emit("message", { username, msg: replyTo ? `@${replyTo}: ${msg}` : msg });
             input.value = "";
@@ -85,12 +72,6 @@
             messageElem.innerHTML += `<span class="username">${username}:</span> ${msg}`;
             chatBox.appendChild(messageElem);
             chatBox.scrollTop = chatBox.scrollHeight;
-        });
-
-        socket.on("muted", (user) => {
-            mutedUsers[user] = true;
-            setTimeout(() => delete mutedUsers[user], 1800000); // حذف سکوت بعد از 30 دقیقه
-            socket.emit("message", { username: " بات(گردن کلفت)", msg: `@${user}: شما برای 30 دقیقه سکوت شده‌اید!` });
         });
     </script>
 </body>
