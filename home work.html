@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت تکالیف</title>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue, remove, runTransaction } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            let username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('userDisplay').textContent = `خوش آمدید، ${username}`;
+                document.getElementById('auth').style.display = 'none';
+                document.getElementById('taskForm').style.display = 'block';
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+        
+        function submitTask() {
+            const title = document.getElementById('taskTitle').value;
+            const desc = document.getElementById('taskDesc').value;
+            const date = document.getElementById('taskDate').value;
+            let username = localStorage.getItem('username');
+            if (username) {
+                push(ref(db, 'tasks/'), {
+                    title, desc, date, user: username, reports: 0
+                });
+            }
+        }
+
+        function loadTasks() {
+            onValue(ref(db, 'tasks/'), snapshot => {
+                const tasksDiv = document.getElementById('tasks');
+                tasksDiv.innerHTML = '';
+                snapshot.forEach(task => {
+                    const data = task.val();
+                    if (new Date(data.date) > new Date()) {
+                        const taskElem = document.createElement('div');
+                        taskElem.classList.add('task');
+                        taskElem.innerHTML = `<h3>${data.title}</h3><p>${data.desc}</p><p>توسط: ${data.user}</p>` +
+                            `<button onclick="reportTask('${task.key}')">گزارش</button>`;
+                        tasksDiv.appendChild(taskElem);
+                    } else {
+                        remove(ref(db, 'tasks/' + task.key));
+                    }
+                });
+            });
+        }
+
+        function reportTask(taskId) {
+            const taskRef = ref(db, 'tasks/' + taskId + '/reports');
+            runTransaction(taskRef, count => (count || 0) + 1);
+        }
+
+        window.onload = loadTasks;
+    </script>
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; text-align: right; background-color: #f4f4f4; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .task { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; background: #fff; }
+        button { background: #28a745; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 5px; }
+        button:hover { background: #218838; }
+        input, textarea { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>مدیریت تکالیف</h1>
+        <p id="userDisplay"></p>
+        <div id="auth">
+            <p>برای استفاده از سیستم ابتدا وارد شوید.</p>
+            <a href="login.html"><button>ورود</button></a>
+        </div>
+        <div id="taskForm" style="display:none;">
+            <input type="text" id="taskTitle" placeholder="عنوان تکلیف">
+            <textarea id="taskDesc" placeholder="توضیحات"></textarea>
+            <input type="date" id="taskDate">
+            <button onclick="submitTask()">ثبت تکلیف</button>
+        </div>
+        <h2>لیست تکالیف</h2>
+        <div id="tasks"></div>
+    </div>
+</body>
+</html>
