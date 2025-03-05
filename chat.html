@@ -94,23 +94,51 @@
                 console.error('WebSocket error: ', error);
             };
 
-            socket.onmessage = (event) => {
-                console.log('Message received from server: ', event.data);
+            socket.onmessage = async (event) => {
+                let data;
+                if (event.data instanceof Blob) {
+                    data = await event.data.text();
+                } else {
+                    data = event.data;
+                }
+                console.log('Message received from server: ', data);
+
+                const { userName, message } = JSON.parse(data);
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                messageElement.innerHTML = `<strong>${userName}</strong>: ${message} <button class="reply-btn">پاسخ</button>`;
+
+                const messagesContainer = document.getElementById('messages');
+                messagesContainer.appendChild(messageElement);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                const replyBtn = messageElement.querySelector('.reply-btn');
+                replyBtn.addEventListener('click', () => {
+                    const messageInput = document.getElementById('message-input');
+                    messageInput.value = `@${userName} `;
+                    messageInput.focus();
+                });
+
+                const admins = ['AdminName1', 'AdminName2']; // اسامی ادمین‌ها
+                if (admins.includes(userName)) {
+                    messageElement.classList.add('admin');
+                }
             };
 
-            const messagesContainer = document.getElementById('messages');
-            const messageInput = document.getElementById('message-input');
             const sendButton = document.getElementById('send-button');
-            const badWords = ['کلمه1', 'کلمه2', 'کلمه3']; // کلمات بد برای فیلتر کردن
-            const admins = ['AdminName1', 'AdminName2']; // اسامی ادمین‌ها
-
-            sendButton.addEventListener('click', sendMessage);
+            sendButton.addEventListener('click', () => {
+                sendMessage();
+            });
 
             function sendMessage() {
+                const messageInput = document.getElementById('message-input');
                 const message = messageInput.value.trim();
                 const userName = 'UserName'; // این اسم از صفحه قبلی گرفته شود
 
                 if (message === '') return;
+
+                const badWords = ['کلمه1', 'کلمه2', 'کلمه3']; // کلمات بد برای فیلتر کردن
+                const messagesContainer = document.getElementById('messages');
 
                 if (badWords.some(word => message.includes(word))) {
                     const botMessage = document.createElement('div');
@@ -141,26 +169,6 @@
 
                 socket.send(JSON.stringify({ userName, message }));
             }
-
-            socket.addEventListener('message', (event) => {
-                const { userName, message } = JSON.parse(event.data);
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message');
-                messageElement.innerHTML = `<strong>${userName}</strong>: ${message} <button class="reply-btn">پاسخ</button>`;
-
-                messagesContainer.appendChild(messageElement);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                const replyBtn = messageElement.querySelector('.reply-btn');
-                replyBtn.addEventListener('click', () => {
-                    messageInput.value = `@${userName} `;
-                    messageInput.focus();
-                });
-
-                if (admins.includes(userName)) {
-                    messageElement.classList.add('admin');
-                }
-            });
         });
     </script>
 </body>
