@@ -103,25 +103,29 @@
                 }
                 console.log('Message received from server: ', data);
 
-                const { userName, message } = JSON.parse(data);
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message');
-                messageElement.innerHTML = `<strong>${userName}</strong>: ${message} <button class="reply-btn">پاسخ</button>`;
+                try {
+                    const { userName, message } = JSON.parse(data);
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.innerHTML = `<strong>${userName}</strong>: ${message} <button class="reply-btn">پاسخ</button>`;
 
-                const messagesContainer = document.getElementById('messages');
-                messagesContainer.appendChild(messageElement);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    const messagesContainer = document.getElementById('messages');
+                    messagesContainer.appendChild(messageElement);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-                const replyBtn = messageElement.querySelector('.reply-btn');
-                replyBtn.addEventListener('click', () => {
-                    const messageInput = document.getElementById('message-input');
-                    messageInput.value = `@${userName} `;
-                    messageInput.focus();
-                });
+                    const replyBtn = messageElement.querySelector('.reply-btn');
+                    replyBtn.addEventListener('click', () => {
+                        const messageInput = document.getElementById('message-input');
+                        messageInput.value = `@${userName} `;
+                        messageInput.focus();
+                    });
 
-                const admins = ['AdminName1', 'AdminName2']; // اسامی ادمین‌ها
-                if (admins.includes(userName)) {
-                    messageElement.classList.add('admin');
+                    const admins = ['AdminName1', 'AdminName2']; // اسامی ادمین‌ها
+                    if (admins.includes(userName)) {
+                        messageElement.classList.add('admin');
+                    }
+                } catch (e) {
+                    console.error('Error parsing message:', e);
                 }
             };
 
