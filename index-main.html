@@ -232,30 +232,33 @@
           <a href="./tamas ba ma.html">تماس با ما</a>
         </p>
       </footer>
-      <script>
-        // لیست دانش‌آموزان
-        var studentNames = [
-            "محمد ضیا الدینی", "حسن طهمورسی", "علی عرب نزاد", "ارشیا عزیز زاده", "بردیا عسکریان",
-            "محمدمهدی علیزاده", "حسن فدایی", "سپهر فکوری", "امیرعلی قرایی", "حسین قربانی",
-            "امیرعباس قطبی", "پارسا قنبری", "کیان کاراموزیان", "ابوالفضل کارگر", "ابتین کاظمی",
-            "عکی کروکی", "علیرضا کریمی", "رادین کوشش", "محمد مهدی کهندل", "امیرعلی گرانمایه",
-            "مهراد گرگانی", "ارشام لاری", "امین مالکی", "رادین محسنی", "متین محمدی", "سام محمودی"
-        ];
-    
-        // گرفتن شماره دانش‌آموز از localStorage
-        var studentNumber = localStorage.getItem('studentNumber');
-    
-        // تبدیل شماره به نام دانش‌آموز
-        var studentName = studentNames[studentNumber - 1] || "مهمان";
-    
-        // نمایش نام در صفحه اصلی
-        document.getElementById('student-name').textContent = studentName;
-    
-        // تابع برای ذخیره نام کاربر هنگام ورود به چت
-        function goToChat() {
-            localStorage.setItem('chatUsername', studentName);
-            window.location.href = "chat.html"; // انتقال به صفحه چت
-        }
+     
+
+    <script>
+      // لیست دانش‌آموزان
+      var studentNames = [
+          "محمد ضیا الدینی", "حسن طهمورسی", "علی عرب نزاد", "ارشیا عزیز زاده", "بردیا عسکریان",
+          "محمدمهدی علیزاده", "حسن فدایی", "سپهر فکوری", "امیرعلی قرایی", "حسین قربانی",
+          "امیرعباس قطبی", "پارسا قنبری", "کیان کاراموزیان", "ابوالفضل کارگر", "ابتین کاظمی",
+          "عکی کروکی", "علیرضا کریمی", "رادین کوشش", "محمد مهدی کهندل", "امیرعلی گرانمایه",
+          "مهراد گرگانی", "ارشام لاری", "امین مالکی", "رادین محسنی", "متین محمدی", "سام محمودی"
+      ];
+  
+      // گرفتن شماره دانش‌آموز از localStorage
+      var studentNumber = localStorage.getItem('studentNumber');
+  
+      // تبدیل شماره به نام دانش‌آموز
+      var studentName = studentNames[studentNumber - 1] || "مهمان";
+  
+      // نمایش نام در صفحه اصلی
+      document.getElementById('student-name').textContent = studentName;
+  
+      // تابع برای ذخیره نام کاربر هنگام ورود به چت
+      function goToChat() {
+          localStorage.setItem('chatUsername', studentName);
+          window.location.href = "chat.html"; // انتقال به صفحه چت
+      }
+  
     </script>
     
 </body>

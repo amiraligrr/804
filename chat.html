@@ -85,6 +85,9 @@
     <script>
         const socketUrl = 'ws://localhost:8081'; // یا پورت جدید
 
+        // گرفتن نام کاربر از localStorage
+        const userName = localStorage.getItem('chatUsername') || 'مهمان';
+
         function createWebSocket() {
             const socket = new WebSocket(socketUrl);
 
@@ -150,7 +153,6 @@
             function sendMessage(socket) {
                 const messageInput = document.getElementById('message-input');
                 const message = messageInput.value.trim();
-                const userName = 'UserName'; // این اسم از صفحه قبلی گرفته شود
 
                 if (message === '') return;
 
