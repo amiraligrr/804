@@ -83,9 +83,11 @@
     </div>
 
     <script>
-        const socket = new WebSocket('ws://localhost:8080'); // یا پورت جدید
+        const socketUrl = 'ws://localhost:8081'; // یا پورت جدید
 
-        document.addEventListener('DOMContentLoaded', () => {
+        function createWebSocket() {
+            const socket = new WebSocket(socketUrl);
+
             socket.onopen = () => {
                 console.log('WebSocket connection opened');
             };
@@ -129,12 +131,23 @@
                 }
             };
 
+            socket.onclose = () => {
+                console.log('WebSocket connection closed, retrying...');
+                setTimeout(createWebSocket, 1000); // مجدداً اتصال برقرار کن بعد از یک ثانیه
+            };
+
+            return socket;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const socket = createWebSocket();
+
             const sendButton = document.getElementById('send-button');
             sendButton.addEventListener('click', () => {
-                sendMessage();
+                sendMessage(socket);
             });
 
-            function sendMessage() {
+            function sendMessage(socket) {
                 const messageInput = document.getElementById('message-input');
                 const message = messageInput.value.trim();
                 const userName = 'UserName'; // این اسم از صفحه قبلی گرفته شود
@@ -171,7 +184,11 @@
                     messageElement.classList.add('admin');
                 }
 
-                socket.send(JSON.stringify({ userName, message }));
+                if (socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify({ userName, message }));
+                } else {
+                    console.error('WebSocket is not open: readyState is ' + socket.readyState);
+                }
             }
         });
     </script>
