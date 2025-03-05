@@ -1,12 +1,15 @@
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: 8080 }); // یا پورت جدید
 const badWords = ['کلمه1', 'کلمه2', 'کلمه3']; // کلمات بد برای فیلتر کردن
 const admins = ['AdminName1', 'AdminName2']; // اسامی ادمین‌ها
 
 wss.on('connection', (ws) => {
+    console.log('Client connected');
+
     ws.on('message', (message) => {
         const { userName, message: userMessage } = JSON.parse(message);
+        console.log('Message received from client: ', message);
 
         if (badWords.some(word => userMessage.includes(word))) {
             ws.send(JSON.stringify({
@@ -24,4 +27,4 @@ wss.on('connection', (ws) => {
     });
 });
 
-console.log('Server is running on ws://localhost:8080');
+console.log('Server is running on ws://localhost:8080'); // یا پورت جدید

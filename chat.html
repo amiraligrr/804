@@ -83,9 +83,21 @@
     </div>
 
     <script>
-        const socket = new WebSocket('ws://localhost:8080');
+        const socket = new WebSocket('ws://localhost:8080'); // یا پورت جدید
 
         document.addEventListener('DOMContentLoaded', () => {
+            socket.onopen = () => {
+                console.log('WebSocket connection opened');
+            };
+
+            socket.onerror = (error) => {
+                console.error('WebSocket error: ', error);
+            };
+
+            socket.onmessage = (event) => {
+                console.log('Message received from server: ', event.data);
+            };
+
             const messagesContainer = document.getElementById('messages');
             const messageInput = document.getElementById('message-input');
             const sendButton = document.getElementById('send-button');
@@ -99,7 +111,7 @@
                 const userName = 'UserName'; // این اسم از صفحه قبلی گرفته شود
 
                 if (message === '') return;
-                
+
                 if (badWords.some(word => message.includes(word))) {
                     const botMessage = document.createElement('div');
                     botMessage.classList.add('message');
@@ -117,23 +129,19 @@
                 messageInput.value = '';
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-                // اضافه کردن عملکرد دکمه پاسخ
                 const replyBtn = messageElement.querySelector('.reply-btn');
                 replyBtn.addEventListener('click', () => {
                     messageInput.value = `@${userName} `;
                     messageInput.focus();
                 });
 
-                // بررسی اگر فرستنده ادمین است
                 if (admins.includes(userName)) {
                     messageElement.classList.add('admin');
                 }
 
-                // ارسال پیام به سمت سرور
                 socket.send(JSON.stringify({ userName, message }));
             }
 
-            // دریافت پیام‌های جدید از سرور
             socket.addEventListener('message', (event) => {
                 const { userName, message } = JSON.parse(event.data);
                 const messageElement = document.createElement('div');
@@ -143,14 +151,12 @@
                 messagesContainer.appendChild(messageElement);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-                // اضافه کردن عملکرد دکمه پاسخ
                 const replyBtn = messageElement.querySelector('.reply-btn');
                 replyBtn.addEventListener('click', () => {
                     messageInput.value = `@${userName} `;
                     messageInput.focus();
                 });
 
-                // بررسی اگر فرستنده ادمین است
                 if (admins.includes(userName)) {
                     messageElement.classList.add('admin');
                 }
