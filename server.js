@@ -33,4 +33,4 @@ wss.on('connection', (ws) => {
     });
 });
 
-console.log('Server is running on ws://localhost:8081');
+console.log('Server is running on ws://localhost:8080');
